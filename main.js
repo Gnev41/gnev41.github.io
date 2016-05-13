@@ -57,9 +57,9 @@ var diameter = (window.innerWidth < window.innerHeight ? window.innerWidth : win
           // выводим символы
           ctx.fillText(s[i], 0, -radius);
           ctx.restore();
+        }
+        ctx.restore();
       }
-      ctx.restore();
-    }
 
 
 
@@ -118,6 +118,35 @@ var diameter = (window.innerWidth < window.innerHeight ? window.innerWidth : win
     .append("g")
     .attr("transform", "translate(1,1)");
 
+    //для отрисовки текста над кругами 
+    //svg.append("defs");
+
+    function getPathData1() {
+        // adjust the radius a little so our text's baseline isn't sitting directly on the circle
+        var r = (diameter /2)*0.98;
+        return 'm' + 0 + ',' + r + ' ' +
+        'a' + r + ',' + r + ' 0 0 0 ' + (2*r) + ',0';
+      }
+/*
+       d3.select("svg")
+      .append("path")
+        .attr("d" , getPathData1()//getPathData( d3.select("#main_circle").datum().x, d3.select("#main_circle").datum().y,diameter/2)
+          )
+
+    d3.select("svg")
+      .append("defs")
+      .append("path")
+        .attr("d" , getPathData1()getPathData(d3.select("#main_circle").datum().x, d3.select("#main_circle").datum().y,diameter/2)
+          )
+        .attr("id", "curvedTextPath")
+        ;
+        
+        d3.select("svg")
+        .append("textPath")
+        .attr("startOffset", "50%")
+        .attr("xlink:href", "#curvedTextPath")
+        .text("Hello, world!");
+        */
 
     node = svg.datum(json).selectAll(".node")//добавление всех кругов
     .data(pack.nodes)
@@ -129,16 +158,7 @@ var diameter = (window.innerWidth < window.innerHeight ? window.innerWidth : win
     node//добавление всплывающего текста
     .filter(function(d) { return d.children; })
     .append("title")
-    .text(function(d) { 
-      /*draw3DTextCircle(
-        d3.select(this).datum().name,
-        d3.select(this).datum().x,
-        d3.select(this).datum().y,
-        d3.select(this).datum().r,
-        0
-        );*/
-        return d.name 
-      })
+    .text(function(d) { return d.name })
     ;
 
     function getPathData(x,y,ra) {
@@ -146,39 +166,7 @@ var diameter = (window.innerWidth < window.innerHeight ? window.innerWidth : win
         var r = ra * 1.1;
         return 'm' + x + ',' + (y+ra) + ' ' +
         'a' + r + ',' + r + ' 0 0 0 ' + (2*r) + ',1';
-    }
-
-    node//добавление всплывающего текста
-    .filter(function(d) { return d.children; })
-    .append("textPath")
-    .attr("xlink:href",function(d) {
-      d3.select(this)
-      .append("defs")
-      .append("path")
-      .attr("id","path")
-      .attr("d",getPathData(
-        d3.select(this).datum().x,
-        d3.select(this).datum().y,
-        d3.select(this).datum().r)
-      )
-      ;
-
-      return "#path"; })
-    .text(function(d) { return d.name })
-    ;
-
-
-/*    node//отрисовка текста поверх круга для родителей
-    .filter(function(d) { return d.children; })
-    .forEach(function(d) {
-      draw3DTextCircle(
-        d.name,
-        d.x,
-        d.y,
-        d.r,
-        0
-        );
-      })*/
+      }
 
   //отрисовка самих кружочков
   circle = node
@@ -193,33 +181,19 @@ var diameter = (window.innerWidth < window.innerHeight ? window.innerWidth : win
         //.select("circle")
         .attr("id", function(d) { return "main_circle"; })
         ;
+
+
+
+
+
   //текст внутри пузырьков
-  text = node.filter(function(d) { return !d.children; })
+  text = node//.filter(function(d) { return !d.children; })
         .append("text")//если проходит фильтр(нет детей т.е. сам ребенок последнего поколения),
         .style("text-anchor", "middle")
+        .style("font-size","9px")
         .text(function(d) { return d.name})
         //  d.r / 3 < d.name.length ? d.name.substring(0,d.name.substring(0, d.r / 3).lastIndexOf(" ")) : d.name; })
         ;
-
-
-
-        /*node.filter(function(d) { return !d.children; })
-        .filter(function(d) { return d.r / 3 >d.name.length; })
-        .append("text")//если проходит фильтр(нет детей т.е. сам ребенок последнего поколения),
-        .style("text-anchor", "middle")
-        .style("-moz-hyphens", "auto")
-        .style("webkit-hyphens", "auto")
-        .style("-ms-hyphens", "auto")
-        .text(function(d) { return d.name.substring(d.name.substring(0, d.r / 3).lastIndexOf(" ")); })
-        ;*/
-        /*
-
-        d3.select(self.frameElement).style("height", diameter + "px")
-        ;
-
-        */
-
-
 
         node
         .filter(function(d) { return !d.children; })
@@ -265,6 +239,63 @@ var diameter = (window.innerWidth < window.innerHeight ? window.innerWidth : win
           .attr("transform", function(d) { return "translate(" + (lastX- d.x) + "," + (lastY-d.y) + ")"; })
         });
 
-
       }
       render(data);
+
+
+
+
+        /*node.filter(function(d) { return !d.children; })
+        .filter(function(d) { return d.r / 3 >d.name.length; })
+        .append("text")//если проходит фильтр(нет детей т.е. сам ребенок последнего поколения),
+        .style("text-anchor", "middle")
+        .style("-moz-hyphens", "auto")
+        .style("webkit-hyphens", "auto")
+        .style("-ms-hyphens", "auto")
+        .text(function(d) { return d.name.substring(d.name.substring(0, d.r / 3).lastIndexOf(" ")); })
+        ;*/
+        /*
+
+        d3.select(self.frameElement).style("height", diameter + "px")
+        ;
+
+        */
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+    node//добавление всплывающего текста
+    .filter(function(d) { return d.children; })
+    .append("textPath")
+    .attr("xlink:href",function(d) {
+      d3.select("defs")
+      .append("path")
+      .attr("id",d.x+"_"+d.y)
+      .attr("d",getPathData(
+        d3.select(this).datum().x,
+        d3.select(this).datum().y,
+        d3.select(this).datum().r)
+      )
+      ;
+
+      return "#"+d.x+"_"+d.y; })
+    .text(function(d) { return d.name })
+    ;//d3.select("#main_circle").datum()
+    */
+
+/*    node//отрисовка текста поверх круга для родителей
+    .filter(function(d) { return d.children; })
+    .forEach(function(d) {
+      draw3DTextCircle(
+        d.name,
+        d.x,
+        d.y,
+        d.r,
+        0
+        );
+      })*/
+
+/////////////////////////////////////////////////////////////////////////////////////
+        /*
+        circle //уменьшаем только детей
+        .filter(function(d) { return !d.children; })
+        .attr("r", function(d) { d.r=d.r-30;return d.r; })
+*/
