@@ -93,7 +93,7 @@ var diameter = (window.innerWidth < window.innerHeight ? window.innerWidth : win
     .select("text")
     .remove();
 
-
+/*
     //вставляем текст
     question = d3.select("#question")
     .select("td")
@@ -103,7 +103,7 @@ var diameter = (window.innerWidth < window.innerHeight ? window.innerWidth : win
     .style("font-size","17px")
     .text(function(d) { return json.question })
     ;
-
+*/
     
     d3.select("svg").remove();
     svg=[];
