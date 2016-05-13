@@ -79,7 +79,7 @@ var diameter = (window.innerWidth < window.innerHeight ? window.innerWidth : win
       if (error) return console.warn(error);
 
       data=json;
-      render(data);
+      render(json);
     });
    }
 
@@ -181,9 +181,6 @@ var diameter = (window.innerWidth < window.innerHeight ? window.innerWidth : win
         //.select("circle")
         .attr("id", function(d) { return "main_circle"; })
         ;
-
-
-
 
 
   //текст внутри пузырьков
