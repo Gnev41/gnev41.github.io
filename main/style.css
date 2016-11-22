@@ -1,0 +1,4 @@
+.blur{
+-webkit-filter: blur(0.5px) grayscale(90%);
+}
+box-shadow: 0 0 8px 8px white inset;
